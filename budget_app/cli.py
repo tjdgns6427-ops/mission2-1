@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 from typing import Any, Callable, Sequence, TypeVar
 
-from .decorators import friendly_errors
+from .decorators import friendly_errors, measure_execution_time
 from .errors import ValidationError
 from .models import MonthlySummary, SearchCriteria, Transaction
 from .services import BudgetService
@@ -239,6 +239,7 @@ def _export_criteria(args: argparse.Namespace) -> SearchCriteria:
 
 
 @friendly_errors
+@measure_execution_time
 def main(argv: Sequence[str] | None = None) -> int:
     raw_arguments = list(sys.argv[1:] if argv is None else argv)
     data_dir, arguments = _extract_data_dir(raw_arguments)
@@ -298,4 +299,3 @@ def main(argv: Sequence[str] | None = None) -> int:
         count = service.export_csv(args.output_path, _export_criteria(args))
         print(f"[완료] {args.output_path} ({count} records)")
     return 0
-

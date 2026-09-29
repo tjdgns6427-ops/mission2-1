@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1290" viewBox="0 0 1120 1290" role="img" aria-labelledby="title description">
   <title id="title">나만의 용돈 기입장 전체 구조도</title>
-  <desc id="description">사용자의 명령이 __main__.py, cli.py, services.py를 거쳐 storage.py의 세 저장소로 전달된다. decorators.py와 errors.py는 공통 예외 처리를, validators.py는 입력 검증을, models.py는 데이터 구조를 제공한다. 서비스는 CSV를 가져오고 내보내며, 세 저장소는 거래, 카테고리, 예산 JSONL 파일을 읽고 쓴다.</desc>
+  <desc id="description">사용자의 명령이 __main__.py, cli.py, services.py를 거쳐 storage.py의 세 저장소로 전달된다. decorators.py는 공통 예외 처리와 선택적 실행 시간 측정을, errors.py는 사용자용 오류 종류를, validators.py는 입력 검증을, models.py는 데이터 구조를 제공한다. 서비스는 CSV를 가져오고 내보내며, 세 저장소는 거래, 카테고리, 예산 JSONL 파일을 읽고 쓴다.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#52677b" stroke-width="1.6"/></marker>
     <marker id="aux-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8792a2" stroke-width="1.6"/></marker>
@@ -56,8 +56,8 @@
 
   <rect x="40" y="368" width="275" height="116" rx="12" class="helper"/>
   <text x="177.5" y="404" text-anchor="middle" class="file">decorators.py</text>
-  <text x="177.5" y="435" text-anchor="middle" class="role">friendly_errors</text>
-  <text x="177.5" y="463" text-anchor="middle" class="detail">오류 안내 · 종료 코드 반환</text>
+  <text x="177.5" y="435" text-anchor="middle" class="role">예외 처리 · 시간 측정</text>
+  <text x="177.5" y="463" text-anchor="middle" class="detail">오류 안내 · 선택적 실행 시간</text>
 
   <rect x="395" y="368" width="330" height="116" rx="12" class="core"/>
   <text x="560" y="404" text-anchor="middle" class="file">cli.py · main()</text>

@@ -4,13 +4,31 @@ from __future__ import annotations
 
 from functools import wraps
 import json
+import os
 import sys
+from time import perf_counter
 from typing import Callable, ParamSpec, TypeVar
 
 from .errors import BudgetAppError
 
 P = ParamSpec("P")
 R = TypeVar("R", bound=int)
+
+
+def measure_execution_time(function: Callable[P, R]) -> Callable[P, R]:
+    """요청하면 명령의 실행 시간을 표준 오류에 기록한다."""
+
+    @wraps(function)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        started = perf_counter()
+        try:
+            return function(*args, **kwargs)
+        finally:
+            if os.environ.get("BUDGET_APP_TIMING") == "1":
+                elapsed = perf_counter() - started
+                print(f"[실행 시간] {elapsed:.3f}초", file=sys.stderr)
+
+    return wrapper
 
 
 def friendly_errors(function: Callable[P, R]) -> Callable[P, R | int]:
@@ -38,4 +56,3 @@ def friendly_errors(function: Callable[P, R]) -> Callable[P, R | int]:
             return 1
 
     return wrapper
-

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import io
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -271,6 +272,18 @@ class CliTests(unittest.TestCase):
         self.assertNotEqual(exit_code, 0)
         self.assertIn("[오류]", error_output.getvalue())
         self.assertNotIn("Traceback", error_output.getvalue())
+
+    def test_timing_decorator_is_opt_in_and_keeps_exit_code(self) -> None:
+        with patch.dict(os.environ, {"BUDGET_APP_TIMING": "1"}), redirect_stderr(io.StringIO()) as timing_output:
+            exit_code = main(["--data-dir", str(self.data_dir), "list"])
+        self.assertEqual(exit_code, 0)
+        self.assertRegex(timing_output.getvalue(), r"\[실행 시간\] [0-9.]+초")
+
+        with patch.dict(os.environ, {"BUDGET_APP_TIMING": "1"}), redirect_stderr(io.StringIO()) as error_output:
+            exit_code = main(["--data-dir", str(self.data_dir), "delete", "--id", "TX-999999"])
+        self.assertEqual(exit_code, 2)
+        self.assertIn("[실행 시간]", error_output.getvalue())
+        self.assertIn("[오류]", error_output.getvalue())
 
     def test_export_requires_condition(self) -> None:
         with redirect_stderr(io.StringIO()) as error_output:

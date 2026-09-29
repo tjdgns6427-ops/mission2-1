@@ -3,7 +3,7 @@ flowchart TB
     MAIN --> CLI["cli.py · main()<br/>명령 해석 · 입력 · 결과 출력"]
     CLI --> SERVICE["services.py · BudgetService<br/>거래 · 검색 · 월별 요약<br/>예산 · 카테고리 · CSV"]
 
-    ERRORS["errors.py<br/>사용자용 예외 클래스"] -. 예외 종류 .-> DECORATOR["decorators.py<br/>friendly_errors"]
+    ERRORS["errors.py<br/>사용자용 예외 클래스"] -. 예외 종류 .-> DECORATOR["decorators.py<br/>예외 처리 · 시간 측정"]
     DECORATOR -. main 함수 감쌈 .-> CLI
     CLI -. 입력 검사 .-> VALIDATORS["validators.py<br/>날짜 · 금액 · 타입 · 태그 검증"]
     SERVICE -. 입력 검사 .-> VALIDATORS
