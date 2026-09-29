@@ -50,6 +50,27 @@ README.md
 - 서비스: 입력 검증, 월별 합계, 카테고리 교체 등 업무 규칙을 처리합니다.
 - CLI: 사용자의 명령과 입력을 받아 서비스에 전달하고 결과를 출력합니다.
 
+### 프로그램이 움직이는 순서
+
+아래 그림을 위에서 아래로 읽으면 됩니다. 사용자의 명령은 `cli.py`를 거쳐 `BudgetService`로 전달되고, 서비스가 필요한 저장소를 통해 세 JSONL 파일을 사용합니다. 결과는 반대 방향으로 돌아와 화면에 표시됩니다.
+
+```mermaid
+flowchart TB
+    USER([사용자]) --> MAIN["1. __main__.py<br/>프로그램 시작"]
+    MAIN --> CLI["2. cli.py<br/>명령 접수 · 입력 · 결과 출력"]
+    CLI --> SERVICE["3. services.py<br/>거래 처리 · 검색 · 월별 요약 · CSV"]
+
+    SERVICE --> TRANSACTION_STORE["4. storage.py<br/>TransactionRepository<br/>거래 보관함"]
+    SERVICE --> CATEGORY_STORE["4. storage.py<br/>CategoryStore<br/>카테고리 보관함"]
+    SERVICE --> BUDGET_STORE["4. storage.py<br/>BudgetStore<br/>예산 보관함"]
+
+    TRANSACTION_STORE --> TRANSACTIONS[("transactions.jsonl")]
+    CATEGORY_STORE --> CATEGORIES[("categories.jsonl")]
+    BUDGET_STORE --> BUDGETS[("budgets.jsonl")]
+```
+
+이 흐름을 돕는 파일도 있습니다. `models.py`는 거래 데이터의 모양을 정하고, `validators.py`는 날짜·금액 같은 입력을 검사합니다. `decorators.py`는 실행 중 생긴 오류를 잡아 친절한 안내로 바꾸며, `errors.py`는 오류의 종류를 정의합니다. CSV 가져오기·내보내기는 `services.py`가 처리하고 영구 저장에는 JSONL을 사용합니다.
+
 ## 3. 저장 파일
 
 처음 명령을 실행하면 저장 폴더와 다음 세 JSONL 파일이 자동 생성됩니다.
