@@ -1,0 +1,32 @@
+flowchart TB
+    USER([사용자 · 터미널 명령]) --> MAIN["__main__.py<br/>프로그램 시작"]
+    MAIN --> CLI["cli.py · main()<br/>명령 해석 · 입력 · 결과 출력"]
+    CLI --> SERVICE["services.py · BudgetService<br/>거래 · 검색 · 월별 요약<br/>예산 · 카테고리 · CSV"]
+
+    ERRORS["errors.py<br/>사용자용 예외 클래스"] -. 예외 종류 .-> DECORATOR["decorators.py<br/>friendly_errors"]
+    DECORATOR -. main 함수 감쌈 .-> CLI
+    CLI -. 입력 검사 .-> VALIDATORS["validators.py<br/>날짜 · 금액 · 타입 · 태그 검증"]
+    SERVICE -. 입력 검사 .-> VALIDATORS
+    CLI -. 데이터 양식 .-> MODELS["models.py<br/>Transaction · SearchCriteria<br/>MonthlySummary · ImportResult"]
+    SERVICE -. 데이터 양식 .-> MODELS
+    SERVICE <-->|import / export| CSV[(CSV 파일)]
+
+    subgraph STORAGE["storage.py · JSONL 파일 입출력"]
+        TX["TransactionRepository<br/>거래 읽기 · 추가 · 수정 · 삭제"]
+        CAT["CategoryStore<br/>카테고리 목록 · 추가 · 삭제"]
+        BUD["BudgetStore<br/>월별 예산 읽기 · 저장"]
+        TX <--> TXFILE[(transactions.jsonl)]
+        CAT <--> CATFILE[(categories.jsonl)]
+        BUD <--> BUDFILE[(budgets.jsonl)]
+    end
+    SERVICE --> TX
+    SERVICE --> CAT
+    SERVICE --> BUD
+    TX -. Transaction 사용 .-> MODELS
+
+    classDef primary fill:#eef5ff,stroke:#9dbce1,color:#213547;
+    classDef helper fill:#f7f5fc,stroke:#c3bbd5,color:#213547;
+    classDef store fill:#eaf7f2,stroke:#99c9b8,color:#213547;
+    class MAIN,CLI,SERVICE primary;
+    class ERRORS,DECORATOR,VALIDATORS,MODELS helper;
+    class TX,CAT,BUD store;

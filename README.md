@@ -39,6 +39,10 @@ budget_app/
 └─ errors.py         # 사용자용 예외 클래스
 tests/
 └─ test_budget_app.py
+docs/
+├─ architecture.svg # 확대해도 선명한 전체 구조도
+├─ architecture.png # 구조도 이미지
+└─ architecture.mmd # 수정 가능한 Mermaid 원본
 sample_import.csv
 README.md
 ```
@@ -52,24 +56,53 @@ README.md
 
 ### 프로그램이 움직이는 순서
 
-아래 그림을 위에서 아래로 읽으면 됩니다. 사용자의 명령은 `cli.py`를 거쳐 `BudgetService`로 전달되고, 서비스가 필요한 저장소를 통해 세 JSONL 파일을 사용합니다. 결과는 반대 방향으로 돌아와 화면에 표시됩니다.
+가운데 세로선을 따라 **사용자 → 시작 → 명령 접수 → 업무 처리 → 저장소** 순서로 읽습니다. 좌우에는 데이터 모델·입력 검증·오류 처리·CSV를, 아래에는 세 저장소와 각각의 JSONL 파일을 배치했습니다.
+
+[![용돈 기입장의 전체 구조: 실행 흐름, 데이터 모델, 검증, 오류 처리, CSV와 세 JSONL 저장소](docs/architecture.svg)](docs/architecture.svg)
+
+[크게 보기 · SVG](docs/architecture.svg) / [이미지 · PNG](docs/architecture.png) / [Mermaid 원본](docs/architecture.mmd)
+
+사용자 입력과 화면 출력은 `cli.py` 안의 `_handle_add()`, `_print_transactions()`, `_print_summary()` 등이 담당합니다. `decorators.py`의 `friendly_errors`는 `cli.py`의 **`main()`을 감쌉니다**. `models.py`의 데이터 구조는 CLI·서비스·거래 저장소가 공통으로 사용하며, 서비스는 CSV와 거래를 주고받습니다.
+
+<details>
+<summary>Mermaid 구조도 펼치기</summary>
 
 ```mermaid
 flowchart TB
-    USER([사용자]) --> MAIN["1. __main__.py<br/>프로그램 시작"]
-    MAIN --> CLI["2. cli.py<br/>명령 접수 · 입력 · 결과 출력"]
-    CLI --> SERVICE["3. services.py<br/>거래 처리 · 검색 · 월별 요약 · CSV"]
+    USER([사용자 · 터미널 명령]) --> MAIN["__main__.py<br/>프로그램 시작"]
+    MAIN --> CLI["cli.py · main()<br/>명령 해석 · 입력 · 결과 출력"]
+    CLI --> SERVICE["services.py · BudgetService<br/>거래 · 검색 · 월별 요약<br/>예산 · 카테고리 · CSV"]
 
-    SERVICE --> TRANSACTION_STORE["4. storage.py<br/>TransactionRepository<br/>거래 보관함"]
-    SERVICE --> CATEGORY_STORE["4. storage.py<br/>CategoryStore<br/>카테고리 보관함"]
-    SERVICE --> BUDGET_STORE["4. storage.py<br/>BudgetStore<br/>예산 보관함"]
+    ERRORS["errors.py<br/>사용자용 예외 클래스"] -. 예외 종류 .-> DECORATOR["decorators.py<br/>friendly_errors"]
+    DECORATOR -. main 함수 감쌈 .-> CLI
+    CLI -. 입력 검사 .-> VALIDATORS["validators.py<br/>날짜 · 금액 · 타입 · 태그 검증"]
+    SERVICE -. 입력 검사 .-> VALIDATORS
+    CLI -. 데이터 양식 .-> MODELS["models.py<br/>Transaction · SearchCriteria<br/>MonthlySummary · ImportResult"]
+    SERVICE -. 데이터 양식 .-> MODELS
+    SERVICE <-->|import / export| CSV[(CSV 파일)]
 
-    TRANSACTION_STORE --> TRANSACTIONS[("transactions.jsonl")]
-    CATEGORY_STORE --> CATEGORIES[("categories.jsonl")]
-    BUDGET_STORE --> BUDGETS[("budgets.jsonl")]
+    subgraph STORAGE["storage.py · JSONL 파일 입출력"]
+        TX["TransactionRepository<br/>거래 읽기 · 추가 · 수정 · 삭제"]
+        CAT["CategoryStore<br/>카테고리 목록 · 추가 · 삭제"]
+        BUD["BudgetStore<br/>월별 예산 읽기 · 저장"]
+        TX <--> TXFILE[(transactions.jsonl)]
+        CAT <--> CATFILE[(categories.jsonl)]
+        BUD <--> BUDFILE[(budgets.jsonl)]
+    end
+    SERVICE --> TX
+    SERVICE --> CAT
+    SERVICE --> BUD
+    TX -. Transaction 사용 .-> MODELS
+
+    classDef primary fill:#eef5ff,stroke:#9dbce1,color:#213547;
+    classDef helper fill:#f7f5fc,stroke:#c3bbd5,color:#213547;
+    classDef store fill:#eaf7f2,stroke:#99c9b8,color:#213547;
+    class MAIN,CLI,SERVICE primary;
+    class ERRORS,DECORATOR,VALIDATORS,MODELS helper;
+    class TX,CAT,BUD store;
 ```
 
-이 흐름을 돕는 파일도 있습니다. `models.py`는 거래 데이터의 모양을 정하고, `validators.py`는 날짜·금액 같은 입력을 검사합니다. `decorators.py`는 실행 중 생긴 오류를 잡아 친절한 안내로 바꾸며, `errors.py`는 오류의 종류를 정의합니다. CSV 가져오기·내보내기는 `services.py`가 처리하고 영구 저장에는 JSONL을 사용합니다.
+</details>
 
 ## 3. 저장 파일
 

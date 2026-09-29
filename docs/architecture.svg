@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1290" viewBox="0 0 1120 1290" role="img" aria-labelledby="title description">
+  <title id="title">나만의 용돈 기입장 전체 구조도</title>
+  <desc id="description">사용자의 명령이 __main__.py, cli.py, services.py를 거쳐 storage.py의 세 저장소로 전달된다. decorators.py와 errors.py는 공통 예외 처리를, validators.py는 입력 검증을, models.py는 데이터 구조를 제공한다. 서비스는 CSV를 가져오고 내보내며, 세 저장소는 거래, 카테고리, 예산 JSONL 파일을 읽고 쓴다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#52677b" stroke-width="1.6"/></marker>
+    <marker id="aux-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8792a2" stroke-width="1.6"/></marker>
+    <style>
+      text { font-family: 'Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill:#213547; }
+      .title { font-size:30px; font-weight:700; }
+      .subtitle { font-size:18px; fill:#576b7d; }
+      .file { font-size:22px; font-weight:700; }
+      .role { font-size:20px; }
+      .detail { font-size:17px; fill:#546a7c; }
+      .label { font-size:16px; fill:#52677b; }
+      .code { font-family:Consolas,'Malgun Gothic',monospace; font-size:19px; font-weight:600; }
+      .core { fill:#eef5ff; stroke:#9dbce1; stroke-width:1.5; }
+      .helper { fill:#f7f5fc; stroke:#c3bbd5; stroke-width:1.5; }
+      .store { fill:#eaf7f2; stroke:#99c9b8; stroke-width:1.5; }
+      .data { fill:#fff; stroke:#7faa9b; stroke-width:1.5; }
+      .call { fill:none; stroke:#52677b; stroke-width:2; marker-end:url(#arrow); }
+      .aux { fill:none; stroke:#8792a2; stroke-width:1.7; stroke-dasharray:5 5; marker-end:url(#aux-arrow); }
+      .io { fill:none; stroke:#52677b; stroke-width:2; marker-start:url(#arrow); marker-end:url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1120" height="1290" rx="18" fill="#fff"/>
+  <text x="40" y="48" class="title">나만의 용돈 기입장</text>
+  <text x="40" y="79" class="subtitle">명령 접수부터 파일 저장까지 · 실제 코드 기준 전체 구조</text>
+  <path d="M 657 57 H 697" class="call"/><text x="707" y="63" class="label">호출</text>
+  <path d="M 771 57 H 811" class="aux"/><text x="821" y="63" class="label">참조·적용</text>
+  <path d="M 938 57 H 978" class="io"/><text x="988" y="63" class="label">읽기·쓰기</text>
+
+  <rect x="420" y="124" width="280" height="54" rx="27" fill="#213e5e"/>
+  <text x="560" y="159" text-anchor="middle" style="fill:#fff;font-size:21px;font-weight:700">사용자 · 터미널 명령</text>
+
+  <path d="M 560 178 V 222" class="call"/>
+  <path d="M 560 310 V 368" class="call"/>
+  <path d="M 560 484 V 648" class="call"/>
+  <text x="577" y="574" class="label">명령에 맞는 기능 호출</text>
+  <path d="M 177.5 310 V 368" class="aux"/>
+  <text x="192" y="344" class="label">예외 클래스</text>
+  <path d="M 315 426 H 395" class="aux"/>
+  <text x="355" y="412" text-anchor="middle" class="label">감쌈</text>
+  <path d="M 725 410 H 780 V 520 H 805" class="aux"/>
+  <path d="M 755 678 H 790 V 566 H 805" class="aux"/>
+  <path d="M 395 458 H 345 V 620 H 177.5 V 648" class="aux"/>
+  <path d="M 365 710 H 315" class="aux"/>
+  <path d="M 755 732 H 825" class="io"/>
+
+  <rect x="420" y="222" width="280" height="88" rx="12" class="core"/>
+  <text x="560" y="257" text-anchor="middle" class="file">__main__.py</text>
+  <text x="560" y="286" text-anchor="middle" class="role">프로그램 시작</text>
+
+  <rect x="40" y="222" width="275" height="88" rx="12" class="helper"/>
+  <text x="177.5" y="257" text-anchor="middle" class="file">errors.py</text>
+  <text x="177.5" y="286" text-anchor="middle" class="role">입력·조회·저장 오류 정의</text>
+
+  <rect x="40" y="368" width="275" height="116" rx="12" class="helper"/>
+  <text x="177.5" y="404" text-anchor="middle" class="file">decorators.py</text>
+  <text x="177.5" y="435" text-anchor="middle" class="role">friendly_errors</text>
+  <text x="177.5" y="463" text-anchor="middle" class="detail">오류 안내 · 종료 코드 반환</text>
+
+  <rect x="395" y="368" width="330" height="116" rx="12" class="core"/>
+  <text x="560" y="404" text-anchor="middle" class="file">cli.py · main()</text>
+  <text x="560" y="435" text-anchor="middle" class="role">명령 해석 · 입력 · 결과 출력</text>
+  <text x="560" y="463" text-anchor="middle" class="detail">대화형 add · 옵션 분기 · 도움말</text>
+
+  <rect x="805" y="490" width="275" height="108" rx="12" class="helper"/>
+  <text x="942.5" y="526" text-anchor="middle" class="file">validators.py</text>
+  <text x="942.5" y="556" text-anchor="middle" class="role">날짜 · 금액 · 타입 검사</text>
+  <text x="942.5" y="582" text-anchor="middle" class="detail">카테고리 이름 · 태그 검사</text>
+
+  <rect x="40" y="648" width="275" height="124" rx="12" class="helper"/>
+  <text x="177.5" y="684" text-anchor="middle" class="file">models.py</text>
+  <text x="177.5" y="715" text-anchor="middle" class="role">Transaction · 거래 한 건</text>
+  <text x="177.5" y="744" text-anchor="middle" class="detail">검색 조건 · 요약 · 가져오기 결과</text>
+  <text x="177.5" y="800" text-anchor="middle" class="label">CLI·서비스·거래 저장소 공통 사용</text>
+
+  <rect x="365" y="648" width="390" height="124" rx="12" class="core"/>
+  <text x="560" y="683" text-anchor="middle" class="file">services.py · BudgetService</text>
+  <text x="560" y="716" text-anchor="middle" class="role">거래 관리 · 검색 · 월별 요약</text>
+  <text x="560" y="745" text-anchor="middle" class="detail">예산 · 사용 중 카테고리 처리 · CSV 입출력</text>
+
+  <rect x="825" y="648" width="255" height="124" rx="12" fill="#fff7e9" stroke="#dec49a" stroke-width="1.5"/>
+  <text x="952.5" y="684" text-anchor="middle" class="file">CSV 파일</text>
+  <text x="952.5" y="715" text-anchor="middle" class="role">import / export</text>
+  <text x="952.5" y="744" text-anchor="middle" class="detail">외부 파일과 거래 주고받기</text>
+
+  <rect x="28" y="832" width="1064" height="368" rx="16" fill="#f7fbf9" stroke="#d4e6de" stroke-width="1.5"/>
+  <text x="56" y="868" class="file">storage.py</text>
+  <text x="209" y="868" class="subtitle">파일 입출력 담당</text>
+  <path d="M 560 772 V 914" fill="none" stroke="#52677b" stroke-width="2"/>
+  <path d="M 206 914 H 914" fill="none" stroke="#52677b" stroke-width="2"/>
+  <path d="M 206 914 V 940" class="call"/>
+  <path d="M 560 914 V 940" class="call"/>
+  <path d="M 914 914 V 940" class="call"/>
+
+  <rect x="56" y="940" width="300" height="94" rx="12" class="store"/>
+  <text x="206" y="976" text-anchor="middle" class="code">TransactionRepository</text>
+  <text x="206" y="1008" text-anchor="middle" class="role">거래 읽기 · 추가 · 수정 · 삭제</text>
+  <rect x="410" y="940" width="300" height="94" rx="12" class="store"/>
+  <text x="560" y="976" text-anchor="middle" class="code">CategoryStore</text>
+  <text x="560" y="1008" text-anchor="middle" class="role">카테고리 목록 · 추가 · 삭제</text>
+  <rect x="764" y="940" width="300" height="94" rx="12" class="store"/>
+  <text x="914" y="976" text-anchor="middle" class="code">BudgetStore</text>
+  <text x="914" y="1008" text-anchor="middle" class="role">월별 예산 읽기 · 저장</text>
+
+  <path d="M 206 1034 V 1080" class="io"/>
+  <path d="M 560 1034 V 1080" class="io"/>
+  <path d="M 914 1034 V 1080" class="io"/>
+  <g class="data"><path d="M 66 1094 A 140 14 0 0 1 346 1094 V 1137 A 140 14 0 0 1 66 1137 Z"/><ellipse cx="206" cy="1094" rx="140" ry="14"/></g>
+  <text x="206" y="1129" text-anchor="middle" class="code">transactions.jsonl</text>
+  <g class="data"><path d="M 420 1094 A 140 14 0 0 1 700 1094 V 1137 A 140 14 0 0 1 420 1137 Z"/><ellipse cx="560" cy="1094" rx="140" ry="14"/></g>
+  <text x="560" y="1129" text-anchor="middle" class="code">categories.jsonl</text>
+  <g class="data"><path d="M 774 1094 A 140 14 0 0 1 1054 1094 V 1137 A 140 14 0 0 1 774 1137 Z"/><ellipse cx="914" cy="1094" rx="140" ry="14"/></g>
+  <text x="914" y="1129" text-anchor="middle" class="code">budgets.jsonl</text>
+  <text x="560" y="1180" text-anchor="middle" class="detail">제너레이터로 한 건씩 조회 · 임시 파일 + os.replace로 안전하게 교체 · 기본 위치 ./data</text>
+
+  <text x="40" y="1240" class="subtitle">그림 읽는 법</text>
+  <text x="186" y="1240" class="detail">가운데를 따라 내려가며 흐름을 읽고, 좌우에서 공통 기능을 확인하세요.</text>
+  <text x="186" y="1267" class="detail">호출 결과는 저장소 → 서비스 → CLI로 돌아오며, CLI가 사용자에게 출력합니다.</text>
+</svg>
