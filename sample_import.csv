@@ -1,0 +1,5 @@
+date,type,category,amount,memo,tags
+2024-01-10,income,salary,300000,용돈,monthly
+2024-01-11,expense,food,15000,친구와 점심,meal;friend
+2024-01-12,expense,transport,20000,교통카드,commute
+
